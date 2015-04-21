@@ -2,32 +2,24 @@
 
 // tracking asyncs
 var async_count = 0;
-var has_processes = false;
-var done = false;
-
-var tab_count_derived = 0;
+var accepting_calls = true;
 
 // Master Tabs array - to be populated with JSON objects
 var Tabs = new Array();
-var Process_Array = new Array();  // capitalized because it will be the master array of objects.
 
-
-// HTML Handlers
+// HTML Handlers for ol population
 var bodyNode = document.getElementsByTagName("body");
 var olNode = document.getElementsByTagName("ol");
 
 
 // execute
 testListener(); 
-extractInfo(Process_Array);
-
-getRemainingMemory();
+getRemainingMemory(); //get total memory - this is synchronous 
 
 
 // Function List
 
 function testListener() {
-
 	chrome.processes.onUpdatedWithMemory.addListener(function(procs) {
 /* This adds an event listener but as far as I can tell, there's 
 no way to remove it. As such it will keep executing the callback 
@@ -35,9 +27,8 @@ function approx every second, starting the whole cascade again.
 I get around this by using a boolean to see if I have one and only one
 set of processes. Now, I only execute my series of callbacks once, thus 
 giving me the "snapshot" I'm looking for. */
-
-		if (has_processes === false) {
-			has_processes = true;
+		if (accepting_calls === true) {
+			accepting_calls = false;
 
 			console.dir(procs);
 			console.debug("Check 1");
@@ -78,10 +69,6 @@ function extractInfo(object_index) {
 }
 
 
-
-	// apply urls separately bc they are synchronous calls
-
-
 function clipTitle(title) {
 // because I'm getting the titles from the task manager, all tabs will start with "Tab: "
 // The substring() function solves that for me.
@@ -109,7 +96,7 @@ function insertionSort(obj_array) {
 }
 
 function getUrls(tabs) {
-	//get URL from tab ID
+	//get URL from tab ID - these are synchronous so I need to map it later
 }
 
 function kill(tab_Id) {
@@ -178,25 +165,3 @@ function populateHTML(obj_array) {
 function addToList(obj_array) {
 	liNode.innerHTML = obj_array[i].tab_title;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
