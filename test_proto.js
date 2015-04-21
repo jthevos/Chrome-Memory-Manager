@@ -1,24 +1,17 @@
-/* 
-John G Thevos
+/* Coded by John G Thevos */
 
-Use this file to test code.
-On line 27 of 'popup.html', change
-
-<script type="text/javascript" src="jsonobjectTest.js"></script>
-
-to
-
-<script type="text/javascript" src="test_proto.js"></script>
-*/
-
+// tracking asyncs
 var async_count = 0;
 var has_processes = false;
 var done = false;
 
 var tab_count_derived = 0;
 
+// Master Tabs array - to be populated with JSON objects
 var Tabs = new Array();
 
+
+// Object attribute array declaration
 var process_tabs = new Array();
 var tab_Ids = new Array();
 var tab_titles = new Array();
@@ -26,19 +19,31 @@ var tab_urls = new Array();
 var tab_mems = new Array();
 
 
-/* HTML Handlers */
+// HTML Handlers
 var bodyNode = document.getElementsByTagName("body");
 var olNode = document.getElementsByTagName("ol");
 
 
+// execute
 testListener(); 
 
 getRemainingMemory();
 
+pushObjects(process_tabs,tab_Ids,tab_titles,tab_mems);
+
+viewObjects(Tabs);
+
+// Function List
 
 function testListener() {
 
 	chrome.processes.onUpdatedWithMemory.addListener(function(processes) {
+		/* This adds an event listener but as far as I can tell, there's 
+		no way to remove it. As such it will keep executing the callback 
+		function approx every second, starting the whole cascade again.
+		I get around this by using a boolean to see if I have one and only one
+		set of processes. Now, I only execute my series of callbacks once, thus 
+		giving me the "snapshot" I'm looking for. */
 
 		if (has_processes === false) {
 			has_processes = true;
@@ -76,6 +81,8 @@ function getProcessId(processes) {
 	}
 	
 }
+
+// testing two ways of getting memory neither are properly working yet
 
 function getAllocatedMemory(procs) {
 	console.dir("Allocated memory test 1");
@@ -124,6 +131,8 @@ function getAllocatedMemory2(processId) {
 	});
 }
 
+// array handling for a cleaner getProcessId()
+
 function pushProcessIds(proc) {
 	process_tabs.push(proc);
 	//console.dir("Process Ids:")
@@ -134,6 +143,8 @@ function pushTabIds(tab) {
 	//console.dir("Tab Ids:")
 }
 
+// because I'm getting the titles from the task manager, all tabs will start with "Tab: "
+// The substring() function solves that for me.
 
 function pushTitles(title) {
 	var old_title = title;
@@ -244,9 +255,7 @@ function addToList(obj_array) {
 	liNode.innerHTML = obj_array[i].tab_title;
 }
 
-pushObjects(process_tabs,tab_Ids,tab_titles,tab_mems);
 
-viewObjects(Tabs);
 
 
 
