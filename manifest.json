@@ -1,0 +1,25 @@
+{
+	"manifest_version": 2,
+
+	"name": "Memory Manager",
+	"description": "This extension shows a google image search result on the current webpage",
+	"icons": {"38": "rsz_38speedicon"},
+
+	"version": "1.0",
+
+	"browser_action": {
+		"default_icon": "rsz_speedicon.png",
+		"default_popup": "popup.html",
+		"default_title": "Memory Manager"
+	},
+
+	"permissions": [
+	"extension",
+	"windows",
+	"tabs",
+	"processes",
+	"system.memory",
+	"bookmarks",
+	"https://ajax.googleapis.com/"
+	]
+}
