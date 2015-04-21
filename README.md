@@ -8,8 +8,7 @@ APIs used:
 - https://developer.chrome.com/extensions/system_memory
 
 Other resources:
-- http://jsfiddle.net/UTyDa/ 
-	• used to get "for (var key in process)" syntax
+- http://jsfiddle.net/UTyDa/  [used to get "for (var key in process)" syntax]
 - chrome://version/ 
 
 Note:
