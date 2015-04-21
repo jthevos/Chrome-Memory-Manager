@@ -9,16 +9,18 @@ Once I have a complete 1D array of Objects, I can then sort the Objects based on
 
 Note:
 - in order to debug this, right click the broswer-action icon and select "inspect popup". Extensions use a 
-different console which means that console.log(arg); will not work. Use console.dir(arg); instead. 
+different console which means that "console.log(arg);" will not work. Use "console.debug(arg);" for simple debugging, and "console.dir(arg);" if you want print a manipulatable representation of an object. 
 
 APIs used:
 - https://developer.chrome.com/extensions/processes
 - https://developer.chrome.com/extensions/tabs
 - https://developer.chrome.com/extensions/bookmarks
 - https://developer.chrome.com/extensions/system_memory
+- https://developer.chrome.com/devtools/docs/console-api
 
 Other resources:
 - http://jsfiddle.net/UTyDa/  [used to get "for (var key in process)" syntax]
+
 - chrome://version/ 
 
 
