@@ -7,6 +7,10 @@ This code is attempting to create several instences of a JSON Object, Tab, with 
 
 Once I have a complete 1D array of Objects, I can then sort the Objects based on their respective allocated memory attribute (Tabs[i].allocd_mem). Once sorted, I can generate the HTML for popup.html. Buttons will be added under the li's for removing the tab. 
 
+Note:
+- in order to debug this, right click the broswer-action icon and select "inspect popup". Extensions use a 
+different console which means that console.log(arg); will not work. Use console.dir(arg); instead. 
+
 APIs used:
 - https://developer.chrome.com/extensions/processes
 - https://developer.chrome.com/extensions/tabs
@@ -16,10 +20,6 @@ APIs used:
 Other resources:
 - http://jsfiddle.net/UTyDa/  [used to get "for (var key in process)" syntax]
 - chrome://version/ 
-
-Note:
-- in order to debug this, right click the broswer-action icon and select "inspect popup". Extensions use a 
-different console which means that console.log(arg); will not work. Use console.dir(arg); instead. 
 
 
 Currently working on:
