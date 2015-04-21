@@ -10,7 +10,7 @@ APIs used:
 Other resources:
 - http://jsfiddle.net/UTyDa/ 
 	• used to get "for (var key in process)" syntax
-
+- chrome://version/ 
 
 This code is designed to be an in-client memory mangement system. The javascript will take a snapshot of the users current tabs across all windows, capturing the processId as provided by the browser's OS. Tab_id, tab_title, and javascript allocated memory will be derived from the processId. 
 
