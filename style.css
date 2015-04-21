@@ -1,0 +1,47 @@
+#status {
+  /* avoid an excessively wide status text */
+  white-space: pre;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  max-width: 400px;
+}
+#wrapper {
+  /* general container */
+  width: 300px;
+  height: 600px;
+}
+
+#body {
+  
+}
+
+#footer {
+  text-align: center;
+  font-size: 0.8em;
+  border: 2px;
+  height: 20px;
+  padding-top: 30px;
+  /*position: fixed;*/
+}
+
+
+h2 {
+  text-align: center;
+  font-family: sans-serif;
+}
+
+
+body {
+  font-family: "Segoe UI", "Lucida Grande", Tahoma, sans-serif;
+  font-size: 100%;
+}
+
+ol {
+
+}
+
+li {
+  padding-bottom: 10px;
+  text-align: left;
+  font-size: 0.8em;
+}
