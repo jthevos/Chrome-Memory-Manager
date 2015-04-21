@@ -13,13 +13,16 @@ var olNode = document.getElementsByTagName("ol");
 
 
 // execute
-testListener(); 
+exectuteLogic(); 
 getRemainingMemory(); //get total memory - this is synchronous 
 
 
 // Function List
+function constructObject(proc,tab,titl,mem) {
+	Tabs.push({"proc_id": proc, "tab_id": tab, "tab_title": titl, "url": "", "allocd_mem": mem});
+}
 
-function testListener() {
+function exectuteLogic() {
 	chrome.processes.onUpdatedWithMemory.addListener(function(procs) {
 /* This adds an event listener but as far as I can tell, there's 
 no way to remove it. As such it will keep executing the callback 
@@ -50,7 +53,6 @@ that procs[key] always == "[object Object]". I use this to drill down to the obj
 
 function extractInfo(object_index) {
 
-//console.debug("extractInfo Test");
 	if (object_index.type == "renderer") {
 
 		constructObject(object_index.osProcessId, 
@@ -58,9 +60,6 @@ function extractInfo(object_index) {
 						clipTitle(object_index.title), 
 						object_index.jsMemoryAllocated);
 		async_count++;
-
-		//console.debug("extractInfo Test 2");
-
 	}
 	if (Tabs.length == async_count) {
 		//insertionSort(Tabs);
@@ -77,10 +76,6 @@ function clipTitle(title) {
 	return new_title;
 }
 					
-
-function constructObject(proc,tab,titl,mem) {
-	Tabs.push({"proc_id": proc, "tab_id": tab, "tab_title": titl, "url": "", "allocd_mem": mem});
-}
 
 function insertionSort(obj_array) {
 
