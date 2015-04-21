@@ -2,7 +2,7 @@
 	"manifest_version": 2,
 
 	"name": "Memory Manager",
-	"description": "This extension shows a google image search result on the current webpage",
+	"description": "This extension gets allocated memory of processes from Chrome's task manager.",
 	"icons": {"38": "rsz_38speedicon"},
 
 	"version": "1.0",
@@ -14,9 +14,6 @@
 	},
 
 	"permissions": [
-	"extension",
-	"windows",
-	"tabs",
 	"processes",
 	"system.memory",
 	"bookmarks",
