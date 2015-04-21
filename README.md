@@ -7,7 +7,7 @@ This code is attempting to create several instences of a JSON Object, Tab, with 
 
 An if statement detects that a process is a tab through the process.type == "renderer" condition. If true, I call my constructor for the tab Object and pass it in the relevant parameters. A global array is declared to house these objects. The constructor pushes the derived Object to the global array on every call. 
 
-Once I have a complete 1D array of Objects, I can then sort the Objects based on their respective allocated memory attribute (Tabs[i].allocd_mem). Once sorted, I can generate the HTML for popup.html. Buttons will be added under the li's for removing the tab. 
+Once I have a complete one-dimensional array of Objects, I can then sort the Objects based on their respective allocated memory attribute (Tabs[i].allocd_mem). Once sorted, I can generate the HTML for popup.html. Buttons will be added under the li's for removing the tab. 
 
 Note:
 - in order to debug this, right click the broswer-action icon and select "inspect popup". Extensions use a 
