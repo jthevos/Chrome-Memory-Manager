@@ -7,7 +7,7 @@ This code is attempting to create several instences of a JSON Object, Tab, with 
 
 An if statement detects that a process is a tab that process has an array of length 1 associated with the process object. If true, I call my constructor for the tab Object and pass it in the relevant parameters. A global array is declared to house these objects. The constructor pushes the derived Object to the global array on every call. 
 
-Once I have a complete one-dimensional array of Objects, I can then sort the Objects based on their respective allocated memory attribute (Tabs[i].allocd_mem). Once sorted, I can generate the HTML for popup.html. Buttons will be added under the li's for removing the tab. 
+Once I have a complete one-dimensional array of Objects, I can then sort the Objects based on their respective allocated memory attribute (Tabs[i].allocd_mem). I pass the attribute as a string, and use a ternery operator to determine how to sort. Once sorted, I can generate the HTML for popup.html. Buttons will be added under the li's for removing the tab. 
 
 Note:
 - in order to debug this, right click the broswer-action icon and select "inspect popup". Extensions use a 
@@ -27,7 +27,7 @@ Other resources:
 
 Currently working on:
 
-- sychronous sort
 - CSS general
 - kill tab button
+- kill button eventListener to refresh on killed tab
 
