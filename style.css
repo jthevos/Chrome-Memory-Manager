@@ -7,8 +7,8 @@
 }
 #wrapper {
   /* general container */
-  width: 300px;
-  height: 600px;
+  width: 500px;
+  height: 700px;
 }
 
 #body {
@@ -36,12 +36,27 @@ body {
   font-size: 100%;
 }
 
-ol {
+tr {
+  padding: 5px;
+  height: 45px;
+}
+
+ul {
+  list-style-type: none;
+  padding: 0px;
+  margin: 0px;
+}
+
+.closeTab {
+  background-image: url(/Images/red-close-button.png);
+  background-repeat: no-repeat;
+  background-position: 0px center; 
 
 }
 
+
 li {
-  padding-bottom: 10px;
+  padding-bottom: 20px;
   text-align: left;
-  font-size: 0.8em;
+  font-size: 0.9em;
 }
