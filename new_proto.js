@@ -50,6 +50,7 @@ that procs[key] always == "[object Object]". I use this to drill down to the obj
 				}
 			}
 			done = true;
+			console.dir(Tabs);
 			exectueSyncLogic();
 		}
 	});
@@ -71,10 +72,7 @@ function extractInfo(object_index) {
 					object_index.jsMemoryAllocated);
 		}
 	}
-	if (Tabs.length > 10) {
-		//insertionSort(Tabs);
-		console.dir(Tabs);
-	}
+
 	//
 }
 
@@ -88,28 +86,18 @@ function clipTitle(title) {
 }
 					
 
-function insertionSort() {
+// functioning sort for my objects
+// if asc == false, it will sort in descending order
 
-	var titles = new Array();
-	var tab_mems = new Array();
-
-	console.dir("sort test 1");
-
-    var value, i, j;                    // the value currently being compared   
-    for (i=0; i < Tabs.length; i++) {
-        value = Tabs[i].allocd_mem;
-
-		console.dir("sort test 2");
-
-        for (j=i-1; j > -1 && Tabs[j].allocd_mem > value; j--) {
-            Tabs[j+1] = Tabs[j];
-
-			console.dir("sort test 3")
-        }
-        Tabs[j+1] = value;
-    }
-    return Tabs;
+function sortResults(prop, asc) {
+    Tabs = Tabs.sort(function(a, b) {
+        if (asc) return (a[prop] > b[prop]) ? 1 : ((a[prop] < b[prop]) ? -1 : 0);
+        else return (b[prop] > a[prop]) ? 1 : ((b[prop] < a[prop]) ? -1 : 0);
+    });
+    console.dir(Tabs);
 }
+
+/* while i < length - 1 */ 
 
 function exectueSyncLogic() {
 	if (done === true) {
@@ -117,12 +105,11 @@ function exectueSyncLogic() {
 			var tot_mem = formatSizeUnits(info.capacity);
 			var avail_mem = formatSizeUnits(info.availableCapacity);
 
-			//insertionSort()
+			//
+			sortResults("allocd_mem", false);
+
 			document.getElementById('wrapper').appendChild(createDOMTable(Tabs,tot_mem,avail_mem));	
-
-	});
-
-
+		});
 	}
 }
 
