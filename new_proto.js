@@ -105,7 +105,7 @@ function exectueSyncLogic() {
 	if (done === true) {
 		var tot_mem = getTotalMemory();
 		var avail_mem = getAvailableMemory();
-		document.getElementById('wrapper').appendChild(makeUL(Tabs,tot_mem,avail_mem));	
+		document.getElementById('wrapper').appendChild(createDOMTable(Tabs,tot_mem,avail_mem));	
 	}
 }
 
@@ -117,10 +117,10 @@ function getUrl(tab_Id) {
 }
 
 function kill(tab_Id) {
-	chrome.processes.terminate(tab_Id, function(didTerminate) {
+	chrome.tabs.remove(tab_Id, function(didTerminate) {
 		if (didTerminate) {
-			console.debug("termination of " + tab_Id + " successful.");
-			// has process = false; to restart the listener
+			accepting_calls = true; // these two booleans will act as a "refresh"
+			done = false;
 		}
 	});
 }
@@ -158,7 +158,7 @@ function getTotalMemory() {
 	});
 }
 
-function makeUL(array,mem1,mem2) {
+function createDOMTable(array,mem1,mem2) {
 
 	var body = document.createElement('body');
 
@@ -175,20 +175,47 @@ function makeUL(array,mem1,mem2) {
 	body.appendChild(h3a);
 	body.appendChild(h3b);
     // Create the list element:
-    var list = document.createElement('ul');
+    var table = document.createElement('table');
+    var first_tr = document.createElement('tr');
+
+	var first_td = document.createElement('td');
+	var sec_td = document.createElement('td');
+	var trd_td = document.createElement('td');
+
+    first_td.appendChild(document.createTextNode(""));
+    sec_td.appendChild(document.createTextNode("Tab Title"));
+    trd_td.appendChild(document.createTextNode("Allocated Memory"));
+
+    first_tr.appendChild(first_td);
+    first_tr.appendChild(sec_td);
+    first_tr.appendChild(trd_td);
+
+    table.appendChild(first_tr);
 
     for(var i = 0; i < array.length; i++) {
-        // Create the list item:
-        var item = document.createElement('li');
+        // Create the table row and content values:
+        var tr = document.createElement('tr');
+        var td1 = document.createElement('td');
+        //var att = document.createAttribute("class");
+        //att.value = "closeTab";
+
+        var td2 = document.createElement('td');
+        var td3 = document.createElement('td');
 
         // Set its contents:
-        item.appendChild(document.createTextNode(array[i].tab_title));
+        td1.appendChild(document.createTextNode(i+1));
+        td2.appendChild(document.createTextNode(array[i].tab_title));
+        td3.appendChild(document.createTextNode(array[i].allocd_mem));
 
         // Add it to the list:
-        list.appendChild(item);
-    }
+        tr.appendChild(td1);
+        tr.appendChild(td2);
+        tr.appendChild(td3);
 
-    body.appendChild(list);
+        table.appendChild(tr);
+    }
+// <a href="#" class="myButton">codecanyon</a>
+    body.appendChild(table);
 
     // Finally, return the constructed list:
     return body;
