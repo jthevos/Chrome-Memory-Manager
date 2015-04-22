@@ -5,11 +5,18 @@ var async_count = 0;
 var accepting_calls = true;
 var done = false;
 
+// tracking syncs to know when to generate html
+var literal_tab_count = getLiteralTabCount();
+console.dir(literal_tab_count);
+//console.dir(Tabs.length);
 // Master Tabs array - to be populated with JSON objects
 var Tabs = new Array();
 
+
 // execute
 exectuteAsyncLogic(); 
+//getRemainingMemory(); //get total memory - this is synchronous 
+
 
 // Function List
 function constructObject(proc,tab,titl,mem) {
@@ -19,10 +26,12 @@ function constructObject(proc,tab,titl,mem) {
 	
 function exectuteAsyncLogic() {
 	chrome.processes.onUpdatedWithMemory.addListener(function(procs) {
-/* This adds an event listener but as far as I can tell, there's no way to remove it. As such it 
-will keep executing the callback function approx every second, starting the whole cascade again.
-I get around this by using a boolean to see if I have one and only oneset of processes. Now, I only 
-execute my series of callbacks once, thus giving me the "snapshot" I'm looking for. */
+/* This adds an event listener but as far as I can tell, there's 
+no way to remove it. As such it will keep executing the callback 
+function approx every second, starting the whole cascade again.
+I get around this by using a boolean to see if I have one and only one
+set of processes. Now, I only execute my series of callbacks once, thus 
+giving me the "snapshot" I'm looking for. */
 		if (accepting_calls === true) {
 			accepting_calls = false;
 
@@ -41,7 +50,7 @@ that procs[key] always == "[object Object]". I use this to drill down to the obj
 				}
 			}
 			done = true;
-			exectueSyncLogic(); //execute syncronous processes once asyncs are complete
+			exectueSyncLogic();
 		}
 	});
 }
@@ -79,24 +88,41 @@ function clipTitle(title) {
 }
 					
 
-function insertionSort(obj_array) {
+function insertionSort() {
+
+	var titles = new Array();
+	var tab_mems = new Array();
+
+	console.dir("sort test 1");
 
     var value, i, j;                    // the value currently being compared   
-    for (i=0; i < obj_array.length; i++) {
-        value = obj_array[i].allocd_mem;
-        for (j=i-1; j > -1 && obj_array[j].allocd_mem > value; j--) {
-            obj_array[j+1] = obj_array[j];
+    for (i=0; i < Tabs.length; i++) {
+        value = Tabs[i].allocd_mem;
+
+		console.dir("sort test 2");
+
+        for (j=i-1; j > -1 && Tabs[j].allocd_mem > value; j--) {
+            Tabs[j+1] = Tabs[j];
+
+			console.dir("sort test 3")
         }
-        obj_array[j+1] = value;
+        Tabs[j+1] = value;
     }
-    return obj_array;
+    return Tabs;
 }
 
 function exectueSyncLogic() {
 	if (done === true) {
-		var tot_mem = getTotalMemory();
-		var avail_mem = getAvailableMemory();
-		document.getElementById('wrapper').appendChild(createDOMTable(Tabs,tot_mem,avail_mem));	
+		chrome.system.memory.getInfo(function(info) {
+			var tot_mem = formatSizeUnits(info.capacity);
+			var avail_mem = formatSizeUnits(info.availableCapacity);
+
+			//insertionSort()
+			document.getElementById('wrapper').appendChild(createDOMTable(Tabs,tot_mem,avail_mem));	
+
+	});
+
+
 	}
 }
 
@@ -165,22 +191,24 @@ function createDOMTable(array,mem1,mem2) {
 	body.appendChild(h2);
 	body.appendChild(h3a);
 	body.appendChild(h3b);
-
-    // Create the first static table row element:
+    // Create the list element:
     var table = document.createElement('table');
     var first_tr = document.createElement('tr');
 
 	var first_td = document.createElement('td');
 	var sec_td = document.createElement('td');
 	var trd_td = document.createElement('td');
+	var bttn_td = document.createElement('td');
 
     first_td.appendChild(document.createTextNode(""));
     sec_td.appendChild(document.createTextNode("Tab Title"));
     trd_td.appendChild(document.createTextNode("Allocated Memory"));
+    bttn_td.appendChild(document.createTextNode("Close"));
 
     first_tr.appendChild(first_td);
     first_tr.appendChild(sec_td);
     first_tr.appendChild(trd_td);
+    first_tr.appendChild(bttn_td);
 
     table.appendChild(first_tr);
 
@@ -188,23 +216,37 @@ function createDOMTable(array,mem1,mem2) {
         // Create the table row and content values:
         var tr = document.createElement('tr');
         var td1 = document.createElement('td');
+        //var att = document.createAttribute("class");
+        //att.value = "closeTab";
+
         var td2 = document.createElement('td');
         var td3 = document.createElement('td');
+        var td4 = document.createElement('td');
 
-        // Set their contents:
+
+        // Set its contents:
         td1.appendChild(document.createTextNode(i+1));
         td2.appendChild(document.createTextNode(array[i].tab_title));
         td3.appendChild(document.createTextNode(formatSizeUnits(array[i].allocd_mem)));
 
-        // Add it to the row:
+        td4.appendChild(document.createElement("button"));
+
+        td4.addEventListener("click", function() { 
+        	kill(array[i].tab_id); 
+        }, false);
+
+        // Add it to the list:
         tr.appendChild(td1);
         tr.appendChild(td2);
         tr.appendChild(td3);
+        tr.appendChild(td4);
 
-        // Add to the table
         table.appendChild(tr);
     }
+// <a href="#" class="myButton">codecanyon</a>
     body.appendChild(table);
+
+    // Finally, return the constructed list:
     return body;
 }
 
