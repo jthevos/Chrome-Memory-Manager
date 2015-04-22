@@ -5,7 +5,7 @@ This code is designed to be an in-client memory mangement system. The javascript
 
 This code is attempting to create several instences of a JSON Object, Tab, with the captured information from processes. The most important capture is "jsMemoryAllocated", and is only available as part of a callback from onUpdatedWithMemory. An eventListener gets the update ping and returns a dictionary of process Objects that can then be manipulated. 
 
-An if statement detects that a process is a tab through the process.type == "renderer" condition. If true, I call my constructor for the tab Object and pass it in the relevant parameters. A global array is declared to house these objects. The constructor pushes the derived Object to the global array on every call. 
+An if statement detects that a process is a tab that process has an array of length 1 associated with the process object. If true, I call my constructor for the tab Object and pass it in the relevant parameters. A global array is declared to house these objects. The constructor pushes the derived Object to the global array on every call. 
 
 Once I have a complete one-dimensional array of Objects, I can then sort the Objects based on their respective allocated memory attribute (Tabs[i].allocd_mem). Once sorted, I can generate the HTML for popup.html. Buttons will be added under the li's for removing the tab. 
 
@@ -27,6 +27,7 @@ Other resources:
 
 Currently working on:
 
+- sychronous sort
 - CSS general
 - kill tab button
 
