@@ -3,6 +3,7 @@
 // tracking asyncs
 var async_count = 0;
 var accepting_calls = true;
+var done = false;
 
 // tracking syncs to know when to generate html
 var literal_tab_count = getLiteralTabCount();
@@ -16,16 +17,11 @@ var Tabs = new Array();
 exectuteAsyncLogic(); 
 getRemainingMemory(); //get total memory - this is synchronous 
 
-if (Tabs.length == literal_tab_count) {
-	console.debug("DOM test");
-	document.getElementById('wrapper').appendChild(makeUL(Tabs));
-}
-
-
 
 // Function List
 function constructObject(proc,tab,titl,mem) {
-	Tabs.push({"proc_id": proc, "tab_id": tab, "tab_title": titl, "url": "", "allocd_mem": mem});
+	Tabs.push({"proc_id": proc, "tab_id": tab, "tab_title": titl, "allocd_mem": mem});
+	async_count++;
 }
 	
 function exectuteAsyncLogic() {
@@ -53,6 +49,8 @@ that procs[key] always == "[object Object]". I use this to drill down to the obj
 					}
 				}
 			}
+			done = true;
+			exectueSyncLogic();
 		}
 	});
 }
@@ -72,13 +70,12 @@ function extractInfo(object_index) {
 					clipTitle(object_index.title), 
 					object_index.jsMemoryAllocated);
 		}
-
-		async_count++;
 	}
-	if (Tabs.length == async_count) {
+	if (Tabs.length > 10) {
 		//insertionSort(Tabs);
+		console.dir(Tabs);
 	}
-	//console.dir(Tabs);
+	//
 }
 
 
@@ -104,8 +101,19 @@ function insertionSort(obj_array) {
     return obj_array;
 }
 
-function getUrls(tabs) {
-	//get URL from tab ID - these are synchronous so I need to map it later
+function exectueSyncLogic() {
+	if (done === true) {
+		var tot_mem = getTotalMemory();
+		var avail_mem = getAvailableMemory();
+		document.getElementById('wrapper').appendChild(makeUL(Tabs,tot_mem,avail_mem));	
+	}
+}
+
+function getUrl(tab_Id) {
+	chrome.tabs.get(tab_Id, function(tab) {
+		console.debug(tab.url);
+		return tab.url;
+	});
 }
 
 function kill(tab_Id) {
@@ -118,14 +126,14 @@ function kill(tab_Id) {
 }
 
 /*
-function favorite(tab_Id, tab_title, url) {
+function favorite(tab_Id) {
 	 chrome.bookmarks.create({
 	 	'parentId': null,
         'title': tab_title,
         'url': url};
         //, kill(tab_Id); 
-}*/
-	
+}
+*/	
 
 function testKeys(processes) {
 
@@ -138,15 +146,34 @@ function testKeys(processes) {
 }
 
 
-function getRemainingMemory() {
+function getAvailableMemory() {
 	chrome.system.memory.getInfo(function(info) {
-		console.dir("Availably capabity in bytes: "+ info.availableCapacity);
-		console.dir("Total capabity in bytes: "+ info.capacity);
+		return info.availableCapacity;
 	});
 }
 
+function getTotalMemory() {
+	chrome.system.memory.getInfo(function(info) {
+		return info.capacity;
+	});
+}
 
-function makeUL(array) {
+function makeUL(array,mem1,mem2) {
+
+	var body = document.createElement('body');
+
+	var h2 = document.createElement('h2');
+	h2.appendChild(document.createTextNode("Memory Management"));
+	var h3a = document.createElement('h3');
+	h3a.appendChild(document.createTextNode("Total Capacity in Bytes: " + mem1));
+
+	var h3b = document.createElement('h3');
+	h3b.appendChild(document.createTextNode("Available Capacity in Bytes: " + mem2));
+
+
+	body.appendChild(h2);
+	body.appendChild(h3a);
+	body.appendChild(h3b);
     // Create the list element:
     var list = document.createElement('ul');
 
@@ -161,8 +188,10 @@ function makeUL(array) {
         list.appendChild(item);
     }
 
+    body.appendChild(list);
+
     // Finally, return the constructed list:
-    return list;
+    return body;
 }
 
 function getLiteralTabCount() {

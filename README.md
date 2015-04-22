@@ -27,7 +27,6 @@ Other resources:
 
 Currently working on:
 
-- Dynamically manipulating the DOM to display highest memory tabs. 
 - CSS general
 - kill tab button
 
