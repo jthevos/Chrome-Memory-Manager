@@ -41,7 +41,7 @@ that procs[key] always == "[object Object]". I use this to drill down to the obj
 				}
 			}
 			done = true;
-			exectueSyncLogic();
+			exectueSyncLogic(); //execute syncronous processes once asyncs are complete
 		}
 	});
 }
