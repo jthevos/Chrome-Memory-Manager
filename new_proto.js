@@ -156,10 +156,10 @@ function createDOMTable(array,mem1,mem2) {
 	var h2 = document.createElement('h2');
 	h2.appendChild(document.createTextNode("Memory Management"));
 	var h3a = document.createElement('h3');
-	h3a.appendChild(document.createTextNode("Total Capacity in Bytes: " + mem1));
+	h3a.appendChild(document.createTextNode("Total Capacity: " + mem1));
 
 	var h3b = document.createElement('h3');
-	h3b.appendChild(document.createTextNode("Available Capacity in Bytes: " + mem2));
+	h3b.appendChild(document.createTextNode("Available Capacity: " + mem2));
 
 
 	body.appendChild(h2);
