@@ -4,25 +4,31 @@
 var async_count = 0;
 var accepting_calls = true;
 
+// tracking syncs to know when to generate html
+var literal_tab_count = getLiteralTabCount();
+console.dir(literal_tab_count);
+//console.dir(Tabs.length);
 // Master Tabs array - to be populated with JSON objects
 var Tabs = new Array();
 
-// HTML Handlers for ol population
-var bodyNode = document.getElementsByTagName("body");
-var olNode = document.getElementsByTagName("ol");
-
 
 // execute
-exectuteLogic(); 
+exectuteAsyncLogic(); 
 getRemainingMemory(); //get total memory - this is synchronous 
+
+if (Tabs.length == literal_tab_count) {
+	console.debug("DOM test");
+	document.getElementById('wrapper').appendChild(makeUL(Tabs));
+}
+
 
 
 // Function List
 function constructObject(proc,tab,titl,mem) {
 	Tabs.push({"proc_id": proc, "tab_id": tab, "tab_title": titl, "url": "", "allocd_mem": mem});
 }
-
-function exectuteLogic() {
+	
+function exectuteAsyncLogic() {
 	chrome.processes.onUpdatedWithMemory.addListener(function(procs) {
 /* This adds an event listener but as far as I can tell, there's 
 no way to remove it. As such it will keep executing the callback 
@@ -52,19 +58,27 @@ that procs[key] always == "[object Object]". I use this to drill down to the obj
 }
 
 function extractInfo(object_index) {
+	//previously using if (object_index.type == "renderer") {...}
+	// but there are non-tab processes that can be of of type renderer.
+	// As such, detecting an Array of length 1 means for certain I have a tab. 
 
-	if (object_index.type == "renderer") {
+	if (object_index.tabs.length > 0) {
+		console.debug("extract Info Test 1");
+		for (var key in object_index.tabs) { // will always execute one time only
+			console.debug("extract Info Test 2");
 
-		constructObject(object_index.osProcessId, 
-						object_index.id, 
-						clipTitle(object_index.title), 
-						object_index.jsMemoryAllocated);
+			constructObject(object_index.osProcessId, 
+					object_index.tabs[key],  // goes into the tab array of the process and pulls tab_id
+					clipTitle(object_index.title), 
+					object_index.jsMemoryAllocated);
+		}
+
 		async_count++;
 	}
 	if (Tabs.length == async_count) {
 		//insertionSort(Tabs);
 	}
-	console.dir(Tabs);
+	//console.dir(Tabs);
 }
 
 
@@ -132,31 +146,35 @@ function getRemainingMemory() {
 }
 
 
-function populateHTML(obj_array) {
+function makeUL(array) {
+    // Create the list element:
+    var list = document.createElement('ul');
 
-	console.dir("Test 1");
+    for(var i = 0; i < array.length; i++) {
+        // Create the list item:
+        var item = document.createElement('li');
 
-	for (var i = 0; i < tabs.length; i++) {
+        // Set its contents:
+        item.appendChild(document.createTextNode(array[i].tab_title));
 
-		var liNode = document.createElement("li");
-		console.dir("li created");
+        // Add it to the list:
+        list.appendChild(item);
+    }
 
-		liNode.innerHTML = obj_array[i].tab_title;
+    // Finally, return the constructed list:
+    return list;
+}
 
-		//var liTextNode = document.createTextNode(obj_array[i].tab_title);
-		console.dir("li contents created");
+function getLiteralTabCount() {
+	var count = 0;
 
-		//liNode.appendChild(liTextNode);
-		//console.dir("text appended to li");
-
-		olNode.appendChild(liNode);
-		console.dir("li appended to ol");
-
-		bodyNode.appendChild(olNode);
-	}	
-	console.dir("Test 2");
-} 
-
-function addToList(obj_array) {
-	liNode.innerHTML = obj_array[i].tab_title;
+	chrome.windows.getAll({populate: true}, function(windows)
+	{
+		for (var i = 0; i < windows.length; i++) {
+			for (var j = 0; j < windows[i].tabs.length; j++) {
+				count++;
+			}	
+		}
+		return count;
+	});
 }
