@@ -19,6 +19,7 @@ APIs used:
 - https://developer.chrome.com/extensions/bookmarks
 - https://developer.chrome.com/extensions/system_memory
 - https://developer.chrome.com/devtools/docs/console-api
+- note: processes is the only dev exclusive API used
 
 Other resources:
 - http://jsfiddle.net/UTyDa/  used to get "for (var key in process)" syntax 
