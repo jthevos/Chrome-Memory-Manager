@@ -19,12 +19,10 @@ function constructObject(proc,tab,titl,mem) {
 	
 function exectuteAsyncLogic() {
 	chrome.processes.onUpdatedWithMemory.addListener(function(procs) {
-/* This adds an event listener but as far as I can tell, there's 
-no way to remove it. As such it will keep executing the callback 
-function approx every second, starting the whole cascade again.
-I get around this by using a boolean to see if I have one and only one
-set of processes. Now, I only execute my series of callbacks once, thus 
-giving me the "snapshot" I'm looking for. */
+/* This adds an event listener but as far as I can tell, there's no way to remove it. As such it 
+will keep executing the callback function approx every second, starting the whole cascade again.
+I get around this by using a boolean to see if I have one and only oneset of processes. Now, I only 
+execute my series of callbacks once, thus giving me the "snapshot" I'm looking for. */
 		if (accepting_calls === true) {
 			accepting_calls = false;
 
