@@ -5,18 +5,11 @@ var async_count = 0;
 var accepting_calls = true;
 var done = false;
 
-// tracking syncs to know when to generate html
-var literal_tab_count = getLiteralTabCount();
-console.dir(literal_tab_count);
-//console.dir(Tabs.length);
 // Master Tabs array - to be populated with JSON objects
 var Tabs = new Array();
 
-
 // execute
 exectuteAsyncLogic(); 
-getRemainingMemory(); //get total memory - this is synchronous 
-
 
 // Function List
 function constructObject(proc,tab,titl,mem) {
@@ -174,7 +167,8 @@ function createDOMTable(array,mem1,mem2) {
 	body.appendChild(h2);
 	body.appendChild(h3a);
 	body.appendChild(h3b);
-    // Create the list element:
+
+    // Create the first static table row element:
     var table = document.createElement('table');
     var first_tr = document.createElement('tr');
 
@@ -196,29 +190,34 @@ function createDOMTable(array,mem1,mem2) {
         // Create the table row and content values:
         var tr = document.createElement('tr');
         var td1 = document.createElement('td');
-        //var att = document.createAttribute("class");
-        //att.value = "closeTab";
-
         var td2 = document.createElement('td');
         var td3 = document.createElement('td');
 
-        // Set its contents:
+        // Set their contents:
         td1.appendChild(document.createTextNode(i+1));
         td2.appendChild(document.createTextNode(array[i].tab_title));
-        td3.appendChild(document.createTextNode(array[i].allocd_mem));
+        td3.appendChild(document.createTextNode(formatSizeUnits(array[i].allocd_mem)));
 
-        // Add it to the list:
+        // Add it to the row:
         tr.appendChild(td1);
         tr.appendChild(td2);
         tr.appendChild(td3);
 
+        // Add to the table
         table.appendChild(tr);
     }
-// <a href="#" class="myButton">codecanyon</a>
     body.appendChild(table);
-
-    // Finally, return the constructed list:
     return body;
+}
+
+function formatSizeUnits(bytes){
+	if      (bytes>=1000000000) {bytes=(bytes/1000000000).toFixed(2)+' GB';}
+	else if (bytes>=1000000)    {bytes=(bytes/1000000).toFixed(2)+' MB';}
+	else if (bytes>=1000)       {bytes=(bytes/1000).toFixed(2)+' KB';}
+	else if (bytes>1)           {bytes=bytes+' bytes';}
+	else if (bytes==1)          {bytes=bytes+' byte';}
+	else                        {bytes='0 byte';}
+	return bytes;
 }
 
 function getLiteralTabCount() {
