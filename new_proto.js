@@ -7,7 +7,7 @@ var done = false;
 
 // tracking syncs to know when to generate html
 var literal_tab_count = getLiteralTabCount();
-console.dir(literal_tab_count);
+//console.dir(literal_tab_count);
 //console.dir(Tabs.length);
 // Master Tabs array - to be populated with JSON objects
 var Tabs = new Array();
@@ -26,12 +26,10 @@ function constructObject(proc,tab,titl,mem) {
 	
 function exectuteAsyncLogic() {
 	chrome.processes.onUpdatedWithMemory.addListener(function(procs) {
-/* This adds an event listener but as far as I can tell, there's 
-no way to remove it. As such it will keep executing the callback 
-function approx every second, starting the whole cascade again.
-I get around this by using a boolean to see if I have one and only one
-set of processes. Now, I only execute my series of callbacks once, thus 
-giving me the "snapshot" I'm looking for. */
+/* This adds an event listener but as far as I can tell, there's no way to remove it. As such it 
+will keep executing the callback function approx every second, starting the whole cascade again.
+I get around this by using a boolean to see if I have one and only oneset of processes. Now, I only 
+execute my series of callbacks once, thus giving me the "snapshot" I'm looking for. */
 		if (accepting_calls === true) {
 			accepting_calls = false;
 
@@ -45,6 +43,7 @@ that procs[key] always == "[object Object]". I use this to drill down to the obj
 			for (var key in procs) {
 				if (procs.hasOwnProperty(key)) {
 					if (procs[key] == "[object Object]") { 
+						console.dir(procs[key].privateMemory);
 						extractInfo(procs[key]); // get all relevant information
 					}
 				}
@@ -69,11 +68,11 @@ function extractInfo(object_index) {
 			constructObject(object_index.osProcessId, 
 					object_index.tabs[key],  // goes into the tab array of the process and pulls tab_id
 					clipTitle(object_index.title), 
-					object_index.jsMemoryAllocated);
+					object_index.privateMemory);
+
+			console.dir(object_index.jsMemoryAllocated);
 		}
 	}
-
-	//
 }
 
 
@@ -97,8 +96,6 @@ function sortResults(prop, asc) {
     console.dir(Tabs);
 }
 
-/* while i < length - 1 */ 
-
 function exectueSyncLogic() {
 	if (done === true) {
 		chrome.system.memory.getInfo(function(info) {
@@ -120,11 +117,15 @@ function getUrl(tab_Id) {
 	});
 }
 
-function kill(tab_Id) {
+
+function kill(tab_Id, html_index) {
 	chrome.tabs.remove(tab_Id, function(didTerminate) {
 		if (didTerminate) {
-			accepting_calls = true; // these two booleans will act as a "refresh"
-			done = false;
+			//Tabs.length = 0;
+			//accepting_calls = true; // these two booleans will act as a "refresh"
+			//done = false;
+			console.debug("successfully terminated");
+			//document.getElementById("display").deleteRow(html_index);
 		}
 	});
 }
@@ -162,7 +163,7 @@ function getTotalMemory() {
 	});
 }
 
-function createDOMTable(array,mem1,mem2) {
+function createDOMTable(obj_array,mem1,mem2) {
 
 	var body = document.createElement('body');
 
@@ -180,6 +181,7 @@ function createDOMTable(array,mem1,mem2) {
 	body.appendChild(h3b);
     // Create the list element:
     var table = document.createElement('table');
+    table.id = "display";
     var first_tr = document.createElement('tr');
 
 	var first_td = document.createElement('td');
@@ -199,7 +201,7 @@ function createDOMTable(array,mem1,mem2) {
 
     table.appendChild(first_tr);
 
-    for(var i = 0; i < array.length; i++) {
+    for(var i = 0; i < obj_array.length; i++) {
         // Create the table row and content values:
         var tr = document.createElement('tr');
         var td1 = document.createElement('td');
@@ -213,14 +215,12 @@ function createDOMTable(array,mem1,mem2) {
 
         // Set its contents:
         td1.appendChild(document.createTextNode(i+1));
-        td2.appendChild(document.createTextNode(array[i].tab_title));
-        td3.appendChild(document.createTextNode(formatSizeUnits(array[i].allocd_mem)));
+        td2.appendChild(document.createTextNode(obj_array[i].tab_title));
+        td3.appendChild(document.createTextNode(formatSizeUnits(obj_array[i].allocd_mem)));
 
         td4.appendChild(document.createElement("button"));
 
-        td4.addEventListener("click", function() { 
-        	kill(array[i].tab_id); 
-        }, false);
+        //td4.addEventListener("click", kill(obj_array[i].tab_id,i) , false);
 
         // Add it to the list:
         tr.appendChild(td1);
@@ -230,10 +230,10 @@ function createDOMTable(array,mem1,mem2) {
 
         table.appendChild(tr);
     }
-// <a href="#" class="myButton">codecanyon</a>
+
     body.appendChild(table);
 
-    // Finally, return the constructed list:
+    // Finally, return the constructed fully contructed body:
     return body;
 }
 
@@ -243,7 +243,7 @@ function formatSizeUnits(bytes){
 	else if (bytes>=1000)       {bytes=(bytes/1000).toFixed(2)+' KB';}
 	else if (bytes>1)           {bytes=bytes+' bytes';}
 	else if (bytes==1)          {bytes=bytes+' byte';}
-	else                        {bytes='0 byte';}
+	else                        {bytes='0 bytes';}
 	return bytes;
 }
 
