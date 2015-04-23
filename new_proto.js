@@ -118,8 +118,9 @@ function getUrl(tab_Id) {
 }
 
 
-function kill(tab_Id, html_index) {
+function kill(tab_Id) {
 	chrome.tabs.remove(tab_Id, function(didTerminate) {
+		console.dir("kill function called");
 		if (didTerminate) {
 			//Tabs.length = 0;
 			//accepting_calls = true; // these two booleans will act as a "refresh"
@@ -202,25 +203,32 @@ function createDOMTable(obj_array,mem1,mem2) {
     table.appendChild(first_tr);
 
     for(var i = 0; i < obj_array.length; i++) {
+
+    	var kill_value = obj_array[i].tab_id;
+    	console.dir(kill_value);
+    	console.dir(obj_array[i].tab_title);
         // Create the table row and content values:
         var tr = document.createElement('tr');
         var td1 = document.createElement('td');
-        //var att = document.createAttribute("class");
-        //att.value = "closeTab";
 
         var td2 = document.createElement('td');
         var td3 = document.createElement('td');
+        //var td4 = 'button'+ i;
         var td4 = document.createElement('td');
-
-
+        var bttn = document.createElement("button");
+        bttn.setAttribute("name",obj_array[i].tab_id);
         // Set its contents:
         td1.appendChild(document.createTextNode(i+1));
         td2.appendChild(document.createTextNode(obj_array[i].tab_title));
         td3.appendChild(document.createTextNode(formatSizeUnits(obj_array[i].allocd_mem)));
 
-        td4.appendChild(document.createElement("button"));
+        td4.appendChild(bttn);
+        //td4.setAttribute("name",obj_array[i].tab_id);
 
-        //td4.addEventListener("click", kill(obj_array[i].tab_id,i) , false);
+
+        bttn.addEventListener("click", function() {
+        	kill(parseInt(this.getAttribute("name")));
+        }, false);
 
         // Add it to the list:
         tr.appendChild(td1);
