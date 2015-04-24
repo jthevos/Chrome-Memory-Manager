@@ -1,5 +1,12 @@
 # Chrome-Memory-Manager
-This extension is only functional on the developer channel of chrome. chrome://version/ shows you your current channel. Visit http://www.chromium.org/getting-involved/dev-channel to change your version. 
+This extension is only functional on the developer channel of chrome. chrome://version/ shows you your current channel. Visit http://www.chromium.org/getting-involved/dev-channel to change your version. To load the extension in Chrome:
+	1. Visit chrome://extensions in your browser
+
+	2. Ensure that the Developer mode checkbox in the top right-hand corner is checked.
+
+	3. Click Load unpacked extension… to pop up a file-selection dialog.
+
+	4. Navigate to the directory in which your extension files live, and select it.
 
 This code is designed to be an in client memory mangement system. The javascript will take a snapshot of the users current tabs across all windows, capturing all live processes currently running on Chrome's internal task manager. From these processes, I then build an array of JSON Objects with defined properties.
 
