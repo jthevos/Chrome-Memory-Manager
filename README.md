@@ -19,11 +19,7 @@ APIs used:
 - https://developer.chrome.com/extensions/bookmarks
 - https://developer.chrome.com/extensions/system_memory
 - https://developer.chrome.com/devtools/docs/console-api
-
-Other resources:
-- chrome://version/ 
-
-
+ 
 Currently working on:
 
 - dynamically creating the DOM with appropriate bootstrap classes
