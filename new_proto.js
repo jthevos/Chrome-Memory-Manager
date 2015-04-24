@@ -169,7 +169,7 @@ function createDOMTable(obj_array,mem1,mem2) {
 	var body = document.createElement('body');
 
 	var h2 = document.createElement('h2');
-	h2.appendChild(document.createTextNode("Memory Management"));
+	h2.appendChild(document.createTextNode("In Client Memory Management"));
 	var h3a = document.createElement('h3');
 	h3a.appendChild(document.createTextNode("Total Capacity: " + mem1));
 
@@ -180,25 +180,28 @@ function createDOMTable(obj_array,mem1,mem2) {
 	body.appendChild(h2);
 	body.appendChild(h3a);
 	body.appendChild(h3b);
+
+	body.appendChild(document.createElement("hr"));
+	body.appendChild(document.createElement("hr"));
     // Create the list element:
     var table = document.createElement('table');
     table.id = "display";
     var first_tr = document.createElement('tr');
 
-	var first_td = document.createElement('td');
-	var sec_td = document.createElement('td');
-	var trd_td = document.createElement('td');
-	var bttn_td = document.createElement('td');
+	var first_th = document.createElement('th');
+	var sec_th = document.createElement('th');
+	var trd_th = document.createElement('th');
+	var bttn_th = document.createElement('th');
 
-    first_td.appendChild(document.createTextNode(""));
-    sec_td.appendChild(document.createTextNode("Tab Title"));
-    trd_td.appendChild(document.createTextNode("Allocated Memory"));
-    bttn_td.appendChild(document.createTextNode("Close"));
+    first_th.appendChild(document.createTextNode(""));
+    sec_th.appendChild(document.createTextNode("Tab Title"));
+    trd_th.appendChild(document.createTextNode("Private Memory"));
+    bttn_th.appendChild(document.createTextNode("Close"));
 
-    first_tr.appendChild(first_td);
-    first_tr.appendChild(sec_td);
-    first_tr.appendChild(trd_td);
-    first_tr.appendChild(bttn_td);
+    first_tr.appendChild(first_th);
+    first_tr.appendChild(sec_th);
+    first_tr.appendChild(trd_th);
+    first_tr.appendChild(bttn_th);
 
     table.appendChild(first_tr);
 
@@ -217,6 +220,7 @@ function createDOMTable(obj_array,mem1,mem2) {
         var td4 = document.createElement('td');
         var bttn = document.createElement("button");
         bttn.setAttribute("name",obj_array[i].tab_id);
+
         // Set its contents:
         td1.appendChild(document.createTextNode(i+1));
         td2.appendChild(document.createTextNode(obj_array[i].tab_title));
@@ -227,7 +231,8 @@ function createDOMTable(obj_array,mem1,mem2) {
 
 
         bttn.addEventListener("click", function() {
-        	kill(parseInt(this.getAttribute("name")));
+        	// if 'this' isn't specified every button will link to the tab_id of the last loop
+        	kill(parseInt(this.getAttribute("name"))); 
         }, false);
 
         // Add it to the list:
@@ -267,4 +272,93 @@ function getLiteralTabCount() {
 		}
 		return count;
 	});
+}
+
+//experimental bootstrap generator via DOM manipulation 
+function createBootstrapTable(obj_array,mem1,mem2) {
+
+	var body = document.getElementById('body');
+
+	var panel_div = document.createElement('div').className = "panel panel-default";
+
+	var panelhead_div = document.createElement('div').className = "panel-heading";
+		panelhead_div.innerHTML = "In-client Memory Management";
+
+	var panelbody_div = document.createElement('div').className = "panel-body";
+		var p1 = document.createElement("p");
+		p1.appendChild(document.createTextNode("Total Capacity: " + mem1));
+
+		var p2 = document.createElement("p");
+		appendChild(document.createTextNode("Total Capacity: " + mem2));
+
+		panelbody_div.appendChild(p1);
+		panelbody_div.appendChild(p2);
+
+		panelhead_div.appendChild(document.createTextNode("In-client Memory Management"));
+
+
+	panel_div.appendChild(panelhead_div);
+	panel_div.appendChild(panelbody_div);
+
+    // Create the list element:
+    var table = document.createElement('table').className("table");
+    //table.id = "display";
+    var first_tr = document.createElement('tr');
+
+	var first_td = document.createElement('td');
+	var sec_td = document.createElement('td');
+	var trd_td = document.createElement('td');
+	var bttn_td = document.createElement('td');
+
+    first_td.appendChild(document.createTextNode(""));
+    sec_td.appendChild(document.createTextNode("Tab Title"));
+    trd_td.appendChild(document.createTextNode("Allocated Memory"));
+    bttn_td.appendChild(document.createTextNode("Close"));
+
+    first_tr.appendChild(first_td);
+    first_tr.appendChild(sec_td);
+    first_tr.appendChild(trd_td);
+    first_tr.appendChild(bttn_td);
+
+    table.appendChild(first_tr);
+
+    for(var i = 0; i < obj_array.length; i++) {
+
+        // Create the table row and content values:
+        var tr = document.createElement('tr');
+        var td1 = document.createElement('td');
+
+        var td2 = document.createElement('td');
+        var td3 = document.createElement('td');
+        //var td4 = 'button'+ i;
+        var td4 = document.createElement('td');
+        var bttn = document.createElement("button");
+        bttn.setAttribute("name",obj_array[i].tab_id);
+        // Set its contents:
+        td1.appendChild(document.createTextNode(i+1));
+        td2.appendChild(document.createTextNode(obj_array[i].tab_title));
+        td3.appendChild(document.createTextNode(formatSizeUnits(obj_array[i].allocd_mem)));
+
+        td4.appendChild(bttn);
+        //td4.setAttribute("name",obj_array[i].tab_id);
+
+
+        bttn.addEventListener("click", function() {
+        	// if 'this' isn't specified every button will link to the tab_id of the last loop
+        	kill(parseInt(this.getAttribute("name"))); 
+        }, false);
+
+        // Add it to the list:
+        tr.appendChild(td1);
+        tr.appendChild(td2);
+        tr.appendChild(td3);
+        tr.appendChild(td4);
+
+        table.appendChild(tr);
+    }
+
+    panel_div.appendChild(table);
+
+    // Finally, return the constructed fully contructed body:
+    return body;
 }
