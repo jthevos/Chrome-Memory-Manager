@@ -182,7 +182,7 @@ function createDOMTable(obj_array,mem1,mem2) {
 	body.appendChild(h3b);
 
 	body.appendChild(document.createElement("hr"));
-	body.appendChild(document.createElement("hr"));
+
     // Create the list element:
     var table = document.createElement('table');
     table.id = "display";
