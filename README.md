@@ -1,5 +1,5 @@
 # Chrome-Memory-Manager
-This extension is only functional on the developer channel of chrome. chrome://version/ shows you your current channel. Visit http://www.chromium.org/getting-involved/dev-channel to change your version. To load the extension in Chrome,
+Clone this repo and npm install for package.json. This extension is only functional on the developer channel of chrome. chrome://version/ shows you your current channel. Visit http://www.chromium.org/getting-involved/dev-channel to change your version. To load the extension in Chrome,
 
 	1. Visit chrome://extensions in your browser.
 
