@@ -1,0 +1,22 @@
+{
+  "name": "Chrome-Memory-Manager",
+  "version": "1.0.0",
+  "description": "In client memory manager for chrome",
+  "main": "new_proto.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jthevos/Chrome-Memory-Manager.git"
+  },
+  "author": "JGT",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jthevos/Chrome-Memory-Manager/issues"
+  },
+  "homepage": "https://github.com/jthevos/Chrome-Memory-Manager",
+  "dependencies": {
+    "bootstrap": "^3.3.4"
+  }
+}
